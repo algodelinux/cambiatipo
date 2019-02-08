@@ -1,9 +1,18 @@
 cambiatipo
 ==========
 
-Script para cambiar el tipo de un equipo en el fichero /etc/escuela2.0 y realizar opcionalmente un sinc_puppet y un pkgsync tras cambiarlo    
+Script para cambiar el tipo de un equipo en el fichero /etc/escuela2.0 y realizar un sinc_puppet y un pkgsync tras cambiarlo    
+Para evitar que se realice un sinc_puppet o un pkgsync, cambiamos los valores:
 
-
+SINCPUPPET=1   
+PKGSYNC=1   
+   
+Por:   
+   
+SINCPUPPET=0   
+PKGSYNC=0   
+   
+   
 Instalación
 -----------
 
