@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Esteban M. Navas <algodelinux@gmail.com>
+# Fecha creación: 08/07/2016
+# Última modificación: 07/02/2019
+
+SINCPUPPET=1
+PKGSYNC=1
+
+
+# Si no hay parámetros, el script se está usando de forma interactiva
+if [ -z "$1" ]; then
+
+   DIALOG="dialog"
+   tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
+   trap "rm -f $tempfile" 0 1 2 5 15
+
+   $DIALOG --title "Tipo de host" --clear \
+           --inputbox "Introduzca el tipo de host que desea asignar a este equipo [siatic, infolab, workstation, notebook]:" 15 51 2> $tempfile
+
+   retval=$?
+
+   case $retval in
+     0)
+       TIPO=`cat $tempfile`
+     ;;
+     1) ;;
+   esac
+else
+   TIPO=$1
+fi
+
+
+if [ "$TIPO" ] ; then
+
+   grep -q '^tipo=' /etc/escuela2.0 && sed -i "s/^tipo=.*/tipo=$TIPO/" /etc/escuela2.0 || echo "tipo=$TIPO" >> /etc/escuela2.0
+
+   [ $SINCPUPPET -eq 1 ] && [ -x /usr/sbin/sinc_puppet ] && /usr/sbin/sinc_puppet -f now
+   [ $PKGSYNC -eq 1 ] && [ -x /usr/local/sbin/pkgsync ] && /usr/local/sbin/pkgsync -pcnf
+
+fi
